@@ -1,8 +1,20 @@
 package com.superhero.demo.rest;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.superhero.demo.model.Superhero;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(SuperheroResource.class)
 public class SuperheroResourceIntegrationTest {
@@ -42,6 +53,43 @@ public class SuperheroResourceIntegrationTest {
 				.andExpect(status().isOk());
 
 	}
+	
+	@Test
+	public void retrieveAllSuperherosTest() throws Exception {
+
+		List<Superhero> superheros = new ArrayList<Superhero>();
+		superheros.add(superhero);
+
+		when(superheroResource.retrieveAllSuperheros()).thenReturn(superheros);
+
+		mvc.perform(get("/superheros/list").
+				contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[0].firstname", is("firstname")))
+				.andExpect(jsonPath("$[0].lastname", is("lastname")))
+				.andExpect(jsonPath("$[0].superheroname", is("superheroname")));
+		
+		verify(superheroResource, times(1)).retrieveAllSuperheros();
+		verifyNoMoreInteractions(superheroResource);  		
+
+	}
+    
+    @Test
+    public void retrieveSuperheroTest() throws Exception {
+    	when(superheroResource.retrieveSuperhero(superhero.getId())).thenReturn(superhero);
+    	
+		mvc.perform(get("/superheros/show/{id}", 1))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.firstname", is("firstname")))
+				.andExpect(jsonPath("$.lastname", is("lastname")))
+				.andExpect(jsonPath("$.superheroname", is("superheroname")));
+    	
+		verify(superheroResource, times(1)).retrieveSuperhero(superhero.getId());
+		verifyNoMoreInteractions(superheroResource);    	
+
+    }	
     
 	public static String asJsonString(final Object obj) {
 		try {
