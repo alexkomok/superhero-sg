@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,7 +90,19 @@ public class SuperheroResourceIntegrationTest {
 		verify(superheroResource, times(1)).retrieveSuperhero(superhero.getId());
 		verifyNoMoreInteractions(superheroResource);    	
 
-    }	
+    }
+    
+	@Test
+	public void updateSuperheroTest() throws Exception {
+
+		doNothing().when(superheroResource).updateSuperhero(superhero, superhero.getId());
+
+		mvc.perform(put("/superheros/update/{id}", superhero.getId())
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(asJsonString(superhero)))
+				.andExpect(status().isOk());
+
+	}    
     
 	public static String asJsonString(final Object obj) {
 		try {
