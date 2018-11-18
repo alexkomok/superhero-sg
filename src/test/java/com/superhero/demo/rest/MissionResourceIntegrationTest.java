@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,7 +97,19 @@ public class MissionResourceIntegrationTest {
 		verify(missionResource, times(1)).retrieveMission(mission.getId());
 		verifyNoMoreInteractions(missionResource);    	
 
-    }	
+    }
+    
+	@Test
+	public void updateMissionTest() throws Exception {
+
+		doNothing().when(missionResource).updateMission(mission, mission.getId());
+
+		mvc.perform(put("/missions/update/{id}", mission.getId())
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(asJsonString(mission)))
+				.andExpect(status().isOk());
+
+	}    
     
 	public static String asJsonString(final Object obj) {
 		try {
