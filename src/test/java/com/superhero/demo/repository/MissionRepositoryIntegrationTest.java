@@ -24,12 +24,12 @@ public class MissionRepositoryIntegrationTest {
 	@Test
 	public void saveTest() {
 		Mission mission = new Mission();
-		mission.setId(6L);
+		mission.setId(5L);
 		mission.setIsCompleted(false);
 		mission.setIsDeleted(false);
 		mission.setName("mission");
 		missionRepository.save(mission);
-		Optional<Mission> found = missionRepository.findById(6L);
+		Optional<Mission> found = missionRepository.findById(5L);
 		assertThat(found == null, is(false));
 		assertThat(found.isPresent(), is(true));
 		assertThat(mission.getName(), is(found.get().getName()));
