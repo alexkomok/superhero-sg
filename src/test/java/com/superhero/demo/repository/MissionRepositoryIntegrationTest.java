@@ -3,6 +3,7 @@ package com.superhero.demo.repository;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -32,6 +33,20 @@ public class MissionRepositoryIntegrationTest {
 		assertThat(found == null, is(false));
 		assertThat(found.isPresent(), is(true));
 		assertThat(mission.getName(), is(found.get().getName()));
+	}
+
+	@Test
+	public void findAllTest() {
+		List<Mission> missions = missionRepository.findAll();
+		assertThat(missions.isEmpty(), is(false));
+	}
+
+	@Test
+	public void findByIdTest() {
+		Optional<Mission> mission = missionRepository.findById(1L);
+		assertThat(mission == null, is(false));
+		assertThat(mission.get() == null, is(false));
+		assertThat(mission.get().getName().equals("Rescue world"), is(true));
 	}
 
 }

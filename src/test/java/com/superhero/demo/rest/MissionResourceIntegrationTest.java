@@ -1,8 +1,20 @@
 package com.superhero.demo.rest;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +60,43 @@ public class MissionResourceIntegrationTest {
 				.andExpect(status().isOk());
 
 	}
+	
+	@Test
+	public void retrieveAllMissionsTest() throws Exception {
+
+		List<Mission> missions = new ArrayList<Mission>();
+		missions.add(mission);
+
+		when(missionResource.retrieveAllMissions()).thenReturn(missions);
+
+		mvc.perform(get("/missions/list").
+				contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[0].name", is("mission")))
+				.andExpect(jsonPath("$[0].isCompleted", is(false)))
+				.andExpect(jsonPath("$[0].isDeleted", is(false)));
+		
+		verify(missionResource, times(1)).retrieveAllMissions();
+		verifyNoMoreInteractions(missionResource);  		
+
+	}
+    
+    @Test
+    public void retrieveMissionTest() throws Exception {
+    	when(missionResource.retrieveMission(mission.getId())).thenReturn(mission);
+    	
+		mvc.perform(get("/missions/show/{id}", 1))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.name", is("mission")))
+				.andExpect(jsonPath("$.isCompleted", is(false)))
+				.andExpect(jsonPath("$.isDeleted", is(false)));
+    	
+		verify(missionResource, times(1)).retrieveMission(mission.getId());
+		verifyNoMoreInteractions(missionResource);    	
+
+    }	
     
 	public static String asJsonString(final Object obj) {
 		try {
