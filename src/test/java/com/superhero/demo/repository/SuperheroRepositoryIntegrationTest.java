@@ -45,4 +45,12 @@ public class SuperheroRepositoryIntegrationTest {
 		assertThat(superhero.get().getSuperheroname().equals("batman"), is(true));
 	}
 
+	@Test
+	public void deleteByIdTest() {
+		superheroRepository.deleteById(1L);
+		Optional<Superhero> superhero = superheroRepository.findById(1L);
+		assertThat(superhero == null, is(false));
+		assertThat(superhero.isPresent(), is(false));
+	}
+
 }

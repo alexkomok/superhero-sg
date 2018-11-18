@@ -103,6 +103,21 @@ public class SuperheroResourceIntegrationTest {
 				.andExpect(status().isOk());
 
 	}    
+	
+    @Test
+    public void deleteSuperheroTest() throws Exception {
+    	
+		when(superheroResource.retrieveSuperhero(superhero.getId())).thenReturn(superhero);
+		doNothing().when(superheroResource).deleteSuperhero(superhero.getId());
+
+		mvc.perform(get("/superheros/delete/{id}", superhero.getId())
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(asJsonString(superhero)))
+				.andExpect(status().isOk());
+		verify(superheroResource, times(1)).deleteSuperhero(superhero.getId());
+		verifyNoMoreInteractions(superheroResource);
+
+    } 	
     
 	public static String asJsonString(final Object obj) {
 		try {
