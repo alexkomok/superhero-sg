@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
@@ -20,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
  * 
  */
 @Entity
+@SQLDelete(sql="Update mission SET is_deleted = 'true' where id=? and is_completed = 'false'")
+@Where(clause = "is_deleted=0")
 public class Mission {
 
 	@Id
