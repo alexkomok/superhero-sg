@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,14 @@ public class MissionResource {
 			throw new NotFoundException("id-" + id);
 
 		return superhero.get();
+	}
+
+	@PutMapping("/update/{id}")
+	@ApiOperation(value = "Update Mission by id")
+	public void updateMission(@RequestBody Mission superhero, @PathVariable long id) {
+		superhero.setId(id);
+		missionRepository.save(superhero);
+
 	}
 
 }
