@@ -47,3 +47,7 @@ a Super hero company. The application needs to be developped with Java and Sprin
         Boolean IsCompleted
         Boolean Isdeleted
         List    Heroes
+       
+       ![Jenkins build](https://github.com/alexkomok/superhero-sg/raw/master/Jenkins.GIF)
+      
+
