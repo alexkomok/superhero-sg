@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.superhero.demo.model.Mission;
@@ -53,6 +54,13 @@ public class MissionResource {
 		superhero.setId(id);
 		missionRepository.save(superhero);
 
+	}
+	
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@ApiOperation(value = "Delete Mission by id")
+	public void deleteMission(@PathVariable long id) {
+
+		missionRepository.deleteById(id);
 	}
 
 }
