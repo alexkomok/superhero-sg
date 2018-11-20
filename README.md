@@ -29,7 +29,7 @@ a Super hero company. The application needs to be developped with Java and Sprin
 ### Should Have:
         - Code base should respect SOLID principles
 ### Nice to Have:
-        - Securize the Deletion operation with Spring security
+        - Securize the Deletion operation with Spring security (user: user, password: password)
         - Cucumber tests
         - frontend with Angular/React
         - Apply one design Pattern
