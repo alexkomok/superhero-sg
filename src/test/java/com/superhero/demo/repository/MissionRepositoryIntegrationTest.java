@@ -49,4 +49,12 @@ public class MissionRepositoryIntegrationTest {
 		assertThat(mission.get().getName().equals("Rescue world"), is(true));
 	}
 
+	@Test
+	public void deleteByIdTest() {
+		missionRepository.deleteById(1L);
+		Optional<Mission> mission = missionRepository.findById(1L);
+		assertThat(mission == null, is(false));
+		assertThat(mission.isPresent(), is(false));
+	}
+
 }

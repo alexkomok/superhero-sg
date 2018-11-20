@@ -110,6 +110,21 @@ public class MissionResourceIntegrationTest {
 				.andExpect(status().isOk());
 
 	}    
+	
+    @Test
+    public void deleteMissionTest() throws Exception {
+    	
+		when(missionResource.retrieveMission(mission.getId())).thenReturn(mission);
+		doNothing().when(missionResource).deleteMission(mission.getId());
+
+		mvc.perform(get("/missions/delete/{id}", mission.getId())
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(asJsonString(mission)))
+				.andExpect(status().isOk());
+		verify(missionResource, times(1)).deleteMission(mission.getId());
+		verifyNoMoreInteractions(missionResource);
+
+    }	
     
 	public static String asJsonString(final Object obj) {
 		try {
