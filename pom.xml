@@ -29,7 +29,6 @@
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-test</artifactId>
-		    <version>5.1.1.RELEASE</version>
 		    <scope>test</scope>
 		</dependency>	
         <dependency>
@@ -110,6 +109,16 @@
                 <configuration>
                     <repository>${docker.image.prefix}/${project.artifactId}</repository>
                 </configuration>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+							<!-- <goal>push</goal> -->
+						</goals>
+					</execution>
+				</executions>                
             </plugin>
             <!-- end::plugin[] -->
 
