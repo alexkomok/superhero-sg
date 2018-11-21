@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -113,9 +114,14 @@ public class SuperheroResourceIntegrationTest {
 		mvc.perform(get("/superheros/delete/{id}", superhero.getId())
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(asJsonString(superhero)))
+				.andExpect(status().isUnauthorized());
+		
+		mvc.perform(get("/superheros/delete/{id}", superhero.getId()).with(httpBasic("user", "password"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(asJsonString(superhero)))
 				.andExpect(status().isOk());
 		verify(superheroResource, times(1)).deleteSuperhero(superhero.getId());
-		verifyNoMoreInteractions(superheroResource);
+		verifyNoMoreInteractions(superheroResource);		
 
     } 	
     

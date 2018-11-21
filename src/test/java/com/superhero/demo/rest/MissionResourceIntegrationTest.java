@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -116,8 +117,13 @@ public class MissionResourceIntegrationTest {
     	
 		when(missionResource.retrieveMission(mission.getId())).thenReturn(mission);
 		doNothing().when(missionResource).deleteMission(mission.getId());
-
+		
 		mvc.perform(get("/missions/delete/{id}", mission.getId())
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(asJsonString(mission)))
+				.andExpect(status().isUnauthorized());		
+
+		mvc.perform(get("/missions/delete/{id}", mission.getId()).with(httpBasic("user", "password"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(asJsonString(mission)))
 				.andExpect(status().isOk());
